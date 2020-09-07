@@ -3,6 +3,7 @@ import pandas as pd
 import seaborn as sns
 import plotly.express as px
 from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+import numpy as np
 
 
 def open_cvs():
@@ -69,5 +70,38 @@ def count2Plt(df):
 
     plt.show()
 
+def search(df):
+    """ Esta función permite filtrar contenido por año y género, que en el dataframe
+        viene en la columna listed_in.El parámetro que necesita es el nombre del dataframe.
+    """
+    genre=input('Introduce el género por el que deseas filtrar el contenido: ')
+    year=input('Introduce el año por el que deseas filtrar el contenido: ')
+    search = df[(df["release_year"] == int(year)) & (df["listed_in"].str.contains(genre))]
+    return search
+
+def yearsFilter(df):
+    """ Esta función permite filtrar contenido entre los años seleccionados por un género concreto(que en el 
+    dataframe viene en la columna listed_in).El parámetro que necesita es el nombre del dataframe.
+    """
+    year1=input('Introduce el año en el que quieras comenzar a filtrar el contenido: ')
+    year2=input('Introduce el año por el que deseas termiinar de filtrar el contenido: ')
+    genre=input('Introduce el género por el que deseas filtrar el contenido: ')
+    filter = df[(df["release_year"] >= int(year1)) & (df["release_year"] <= int(year2)) & (df["listed_in"].str.contains(genre))]
+    return filter
 
 
+def overYears(df):
+    
+    month_order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12][::-1]
+    df = df.groupby('year_added')['month_added'].value_counts().unstack().fillna(0)[month_order].T
+    plt.figure(figsize=(10, 7), dpi=200)
+    plt.pcolor(df, cmap='gist_heat_r', edgecolors='white', linewidths=2) 
+    plt.xticks(np.arange(0.5, len(df.columns), 1), df.columns, fontsize=7, fontfamily='serif')
+    plt.yticks(np.arange(0.5, len(df.index), 1), df.index, fontsize=7, fontfamily='serif')
+    plt.title('Netflix Contents Update', fontsize=12, fontfamily='serif', fontweight='bold', position=(0.20, 1.0+0.02))
+    cbar = plt.colorbar()
+    cbar.ax.tick_params(labelsize=8) 
+    cbar.ax.minorticks_on()
+    plt.show()
+    
+    
