@@ -132,3 +132,5 @@ dmypy.json
 netflix_titles.csv
 
 .DS_Store
+
+netflix_titles.csv

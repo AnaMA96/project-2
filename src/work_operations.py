@@ -91,7 +91,9 @@ def yearsFilter(df):
 
 
 def overYears(df):
-    
+    """ Esta función permite conocer la evolución de adhesión de contenido a la plataforma
+        a lo largo de los años.El parámetro que necesita es el nombre del dataframe.
+    """
     month_order = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12][::-1]
     df = df.groupby('year_added')['month_added'].value_counts().unstack().fillna(0)[month_order].T
     plt.figure(figsize=(10, 7), dpi=200)
